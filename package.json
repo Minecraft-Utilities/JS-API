@@ -1,0 +1,12 @@
+{
+  "name": "mcutils-js-api",
+  "version": "1.0.0",
+  "module": "src/index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
