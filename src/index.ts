@@ -13,13 +13,10 @@ export async function fetchJavaServer(host: string): Promise<{ server?: JavaServ
   const response = await fetch(`${API_BASE}/server/java/${host}`);
   if (response.ok) {
     return {
-      server: await response.json() as JavaServer
-    }
+      server: (await response.json()) as JavaServer,
+    };
   }
   return {
-    error: await response.json() as ErrorResponse
-  }
+    error: (await response.json()) as ErrorResponse,
+  };
 }
-
-const server = await fetchJavaServer("wildprison.net");
-console.log(server.server?.asn.asnOrg);
