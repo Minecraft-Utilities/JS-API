@@ -7,14 +7,9 @@ export interface Server extends Cache {
   motd: ServerMotd;
   players: ServerPlayers;
   records: Array<DnsRecord>;
-  version: ServerVersion;
   favicon: ServerFavicon;
-  preventsChatReports: boolean;
-  enforcesSecureChat: boolean;
-  previewsChat: boolean;
   location: ServerLocation;
   asn: AsnData;
-  mojangBlocked: boolean;
 };
 
 export type ServerMotd = {
@@ -32,13 +27,6 @@ export type DnsRecord = {
   type: string;
   ttl: number;
   address: string;
-}
-
-export type ServerVersion = {
-  name: string;
-  platform: string;
-  protocol: number;
-  protocolName: string;
 }
 
 export type ServerFavicon = {

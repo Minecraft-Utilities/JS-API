@@ -14,7 +14,7 @@ export type ServerVersion = {
   platform: string;
   protocol: number;
   protocolName: string;
-}
+};
 
 export type ServerFavicon = {
   base64: string;
