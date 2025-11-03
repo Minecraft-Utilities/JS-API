@@ -17,5 +17,6 @@ jobs:
           bun-version: latest
       - run: bun install
       - run: bun run build
-      - run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-      - run: bun publish --no-git-checks
+      - run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
+          bun publish --no-git-checks
