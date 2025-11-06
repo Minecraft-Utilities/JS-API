@@ -7,35 +7,30 @@ export interface Server extends Cache {
   motd: ServerMotd;
   players: ServerPlayers;
   records: Array<DnsRecord>;
-  favicon: ServerFavicon;
   location: ServerLocation;
   asn: AsnData;
-};
+}
 
 export type ServerMotd = {
   raw: string[];
   clean: string[];
   html: string[];
-}
+};
 
 export type ServerPlayers = {
   online: number;
   max: number;
-}
+};
 
 export type DnsRecord = {
   type: string;
   ttl: number;
   address: string;
-}
-
-export type ServerFavicon = {
-  base64: string;
-  url: string;
-}
+};
 
 export type ServerLocation = {
   country: string;
+  countryCode: string;
   region: string;
   latitude: number;
   longitude: number;

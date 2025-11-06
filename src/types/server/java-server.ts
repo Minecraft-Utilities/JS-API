@@ -17,6 +17,5 @@ export type ServerVersion = {
 };
 
 export type ServerFavicon = {
-  base64: string;
   url: string;
-}
+};
