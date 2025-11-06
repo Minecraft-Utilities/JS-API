@@ -15,6 +15,7 @@ export type ServerMotd = {
   raw: string[];
   clean: string[];
   html: string[];
+  preview: string;
 };
 
 export type ServerPlayers = {
