@@ -2,7 +2,7 @@ import type { ErrorResponse } from "./types/response/error-response";
 import { BedrockServer } from "./types/server/bedrock-server";
 import type { JavaServer } from "./types/server/java-server";
 
-const API_BASE = "https://mc.fascinated.cc/api";
+const API_BASE = process.env.MCUTILS_API_BASE || "https://mc.fascinated.cc/api";
 
 /**
  * Fetch a Java Minecraft server.

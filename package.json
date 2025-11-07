@@ -1,13 +1,12 @@
 {
   "name": "mcutils-js-api",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "module": "dist/index.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
   "scripts": {
-    "build": "tsc",
-    "prepublishOnly": "bun run build"
+    "build": "tsc"
   },
   "files": [
     "dist"
