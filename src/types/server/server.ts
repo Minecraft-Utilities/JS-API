@@ -8,7 +8,7 @@ export interface Server extends Cache {
   motd: ServerMotd;
   players: ServerPlayers;
   records: DnsRecord[];
-  location?: ServerLocation | null;
+  location?: GeoLocation | null;
   asn?: AsnData | null;
 }
 
@@ -37,13 +37,14 @@ export type ServerPlayers = {
   sample?: ServerPlayerSample[];
 };
 
-export type ServerLocation = {
+export type GeoLocation = {
   country: string;
   countryCode: string;
   region: string;
   city: string;
   latitude: number;
   longitude: number;
+  flagUrl: string;
 };
 
 export type AsnData = {
