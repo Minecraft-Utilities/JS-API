@@ -5,12 +5,12 @@ export type SkinParts = Record<string, string>;
 export type Skin = {
   model: SkinModel;
   legacy: boolean;
-  url: string;
+  textureUrl: string;
   parts: SkinParts;
 };
 
 export type Cape = {
-  id?: string;
+  textureUrl: string;
 };
 
 export type ProfileProperty = {

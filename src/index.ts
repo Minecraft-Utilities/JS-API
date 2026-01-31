@@ -167,14 +167,12 @@ export class McUtilsAPI {
    * Fetch a player's skin image.
    *
    * @param id the UUID or username of the player (eg: ImFascinated)
-   * @param extension the image format - png or jpg (default: png)
-   * @returns the skin image or the error (if one occurred)
+   * @returns the skin PNG image or the error (if one occurred)
    */
   async fetchPlayerSkin(
-    id: string,
-    extension = "png"
+    id: string
   ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/player/${id}/skin.${extension}`);
+    const response = await fetch(`${this.endpoint}/skin/texture/${id}.png`);
     if (response.ok) {
       return { image: await response.arrayBuffer() };
     }
@@ -188,21 +186,37 @@ export class McUtilsAPI {
    *
    * @param id the UUID or username of the player (eg: ImFascinated)
    * @param part the skin part to fetch (eg: head)
-   * @param extension the image format - png or jpg (default: png)
    * @param size the image size (default: 256)
    * @param overlays whether to render skin overlay layers (default: false)
-   * @returns the skin part image or the error (if one occurred)
+   * @returns the skin part PNG image or the error (if one occurred)
    */
   async fetchPlayerSkinPart(
     id: string,
     part: string,
-    extension = "png",
     size = 256,
     overlays = false
   ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
     const response = await fetch(
-      `${this.endpoint}/player/${id}/skin/${part}.${extension}${this.buildParams({ size: String(size), overlays: String(overlays) })}`
+      `${this.endpoint}/skin/${id}/${part}.png${this.buildParams({ size: String(size), overlays: String(overlays) })}`
     );
+    if (response.ok) {
+      return { image: await response.arrayBuffer() };
+    }
+    return {
+      error: (await response.json()) as ErrorResponse,
+    };
+  }
+
+  /**
+   * Fetch a player's cape image.
+   *
+   * @param id the UUID or username of the player (eg: ImFascinated)
+   * @returns the cape PNG image or the error (if one occurred)
+   */
+  async fetchPlayerCape(
+    id: string
+  ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
+    const response = await fetch(`${this.endpoint}/cape/texture/${id}.png`);
     if (response.ok) {
       return { image: await response.arrayBuffer() };
     }
