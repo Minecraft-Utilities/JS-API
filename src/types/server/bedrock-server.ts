@@ -1,10 +1,11 @@
 import type { Server } from "./server";
 
 export interface BedrockServer extends Server {
+  id: string;
   edition: ServerEdition;
   version: ServerVersion;
   gamemode: ServerGamemode;
-};
+}
 
 export type ServerEdition = "MCPE" | "MCEE";
 

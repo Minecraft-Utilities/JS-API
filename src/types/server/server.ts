@@ -1,4 +1,5 @@
 import type { Cache } from "../cache";
+import type { DnsRecord } from "../dns/dns-record";
 
 export interface Server extends Cache {
   hostname: string;
@@ -6,9 +7,9 @@ export interface Server extends Cache {
   port: number;
   motd: ServerMotd;
   players: ServerPlayers;
-  records: Array<DnsRecord>;
-  location: ServerLocation;
-  asn: AsnData;
+  records: DnsRecord[];
+  location?: ServerLocation | null;
+  asn?: AsnData | null;
 }
 
 export type ServerMotd = {
@@ -18,15 +19,15 @@ export type ServerMotd = {
   preview: string;
 };
 
+export type ServerPlayerSample = {
+  id: string;
+  name: string;
+};
+
 export type ServerPlayers = {
   online: number;
   max: number;
-};
-
-export type DnsRecord = {
-  type: string;
-  ttl: number;
-  address: string;
+  sample?: ServerPlayerSample[];
 };
 
 export type ServerLocation = {

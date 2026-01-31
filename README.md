@@ -1,15 +1,20 @@
-# mcutils-js-api
+# Minecraft Utilities - JavaScript API
 
-To install dependencies:
-
-```bash
-bun install
-```
-
-To run:
+TypeScript client for the [McUtils API](https://mc.fascinated.cc/api) - server status, player lookups, skins, that sort of thing.
 
 ```bash
-bun run src/index.ts
+bun add mcutils-js-api
 ```
 
-This project was created using `bun init` in bun v1.3.1. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+```typescript
+import McUtilsAPI from "mcutils-js-api";
+
+const api = new McUtilsAPI();
+const { player, error } = await api.fetchPlayer("ImFascinated");
+
+if (error) {
+  console.error(error.message);
+} else {
+  console.log(player?.username);
+}
+```

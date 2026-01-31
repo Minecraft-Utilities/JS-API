@@ -2,12 +2,14 @@ import type { Server } from "./server";
 
 export interface JavaServer extends Server {
   version: ServerVersion;
-  favicon: ServerFavicon;
+  favicon: ServerFavicon | null;
+  modInfo?: ForgeModInfo;
+  forgeData?: ForgeData;
   preventsChatReports: boolean;
   enforcesSecureChat: boolean;
   previewsChat: boolean;
   mojangBlocked: boolean;
-};
+}
 
 export type ServerVersion = {
   name: string;
@@ -17,5 +19,29 @@ export type ServerVersion = {
 };
 
 export type ServerFavicon = {
+  base64?: string;
   url: string;
+};
+
+export type ForgeModInfo = {
+  type: string;
+  modList?: ForgeMod[];
+};
+
+export type ForgeData = {
+  channels?: ForgeChannel[];
+  mods?: ForgeMod[];
+  truncated: boolean;
+  fmlNetworkVersion: number;
+};
+
+export type ForgeChannel = {
+  name: string;
+  version: string;
+  required?: boolean;
+};
+
+export type ForgeMod = {
+  name: string;
+  version: string;
 };
