@@ -1,4 +1,4 @@
-import type { Cache } from "../cache";
+import type { Cache } from "../cache/cache";
 import type { DnsRecord } from "../dns/dns-record";
 
 export interface Server extends Cache {
@@ -19,9 +19,16 @@ export type ServerMotd = {
   preview: string;
 };
 
+export type ServerPlayerSampleName = {
+  raw: string;
+  clean: string;
+  html: string;
+};
+
 export type ServerPlayerSample = {
   id: string;
-  name: string;
+  name: ServerPlayerSampleName;
+  url: string;
 };
 
 export type ServerPlayers = {

@@ -1,4 +1,4 @@
-import type { Server } from "./server";
+import type { Server } from "../server";
 
 export interface JavaServer extends Server {
   version: ServerVersion;

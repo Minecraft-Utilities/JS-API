@@ -1,8 +1,8 @@
 import type { ErrorResponse } from "./types/response/error-response";
-import type { BedrockServer } from "./types/server/bedrock-server";
-import type { JavaServer } from "./types/server/java-server";
-import type { CachedPlayer } from "./types/player/cached-player";
-import type { CachedPlayerName } from "./types/player/cached-player-name";
+import type { BedrockServer } from "./types/server/impl/bedrock-server";
+import type { JavaServer } from "./types/server/impl/java-server";
+import type { CachedPlayer } from "./types/cache/cached-player";
+import type { CachedPlayerName } from "./types/cache/cached-player-name";
 
 export class McUtilsAPI {
   private readonly endpoint: string;

@@ -1,4 +1,4 @@
-import type { Cache } from "../cache";
+import type { Cache } from "./cache";
 
 export type CachedPlayerNameData = {
   username: string;

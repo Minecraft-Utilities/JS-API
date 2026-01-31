@@ -1,18 +1,7 @@
-export interface ARecord {
-  type: "A";
-  ttl: number;
-  name?: string;
-  address?: string;
-}
+import type { ARecord } from "./impl/a-record";
+import type { SRVRecord } from "./impl/srv-record";
 
-export interface SRVRecord {
-  type: "SRV";
-  ttl: number;
-  name: string;
-  target: string;
-  priority: number;
-  weight: number;
-  port: number;
-}
+export type { ARecord } from "./impl/a-record";
+export type { SRVRecord } from "./impl/srv-record";
 
 export type DnsRecord = ARecord | SRVRecord;
