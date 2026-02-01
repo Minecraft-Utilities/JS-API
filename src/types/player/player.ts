@@ -1,6 +1,7 @@
 export type SkinModel = "DEFAULT" | "SLIM";
 
-export type SkinParts = Record<string, string>;
+export type SkinPart = "HEAD" | "FULLBODY_FRONT" | "FULLBODY_BACK" | "FACE" | "BODY";
+export type SkinParts = Record<SkinPart, string>;
 
 export type Skin = {
   model: SkinModel;
