@@ -1,6 +1,6 @@
 import type { ErrorResponse } from "./types/response/error-response";
 import type { ServerBlockedResponse } from "./types/response/server-blocked-response";
-import type { IpLookupResponse } from "./types/response/ip-lookup-response";
+import type { IpLookup } from "./types/response/ip-lookup-response";
 import type { BedrockServer } from "./types/server/impl/bedrock-server";
 import type { JavaServer } from "./types/server/impl/java-server";
 import type { CachedPlayer } from "./types/cache/cached-player";
@@ -91,10 +91,10 @@ export class McUtilsAPI {
    */
   async fetchIpLookup(
     query: string
-  ): Promise<{ data?: IpLookupResponse; error?: ErrorResponse }> {
+  ): Promise<{ data?: IpLookup; error?: ErrorResponse }> {
     const response = await fetch(`${this.endpoint}/ip/${query}`);
     if (response.ok) {
-      return { data: (await response.json()) as IpLookupResponse };
+      return { data: (await response.json()) as IpLookup };
     }
     return {
       error: (await response.json()) as ErrorResponse,
