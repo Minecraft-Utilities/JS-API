@@ -53,4 +53,5 @@ export type GeoLocation = {
 export type AsnLookup = {
   asn: string;
   asnOrg: string;
+  cidr: string;
 };
