@@ -1,4 +1,6 @@
 import type { ErrorResponse } from "./types/response/error-response";
+import type { ServerBlockedResponse } from "./types/response/server-blocked-response";
+import type { IpLookupResponse } from "./types/response/ip-lookup-response";
 import type { BedrockServer } from "./types/server/impl/bedrock-server";
 import type { JavaServer } from "./types/server/impl/java-server";
 import type { CachedPlayer } from "./types/cache/cached-player";
@@ -73,8 +75,26 @@ export class McUtilsAPI {
   ): Promise<{ blocked?: boolean; error?: ErrorResponse }> {
     const response = await fetch(`${this.endpoint}/server/blocked/${host}`);
     if (response.ok) {
-      const json = (await response.json()) as { blocked: boolean };
+      const json = (await response.json()) as ServerBlockedResponse;
       return { blocked: json.blocked };
+    }
+    return {
+      error: (await response.json()) as ErrorResponse,
+    };
+  }
+
+  /**
+   * Look up IP address (geo + ASN).
+   *
+   * @param query the IP address to lookup (eg: 127.0.0.1)
+   * @returns the IP lookup response or the error (if one occurred)
+   */
+  async fetchIpLookup(
+    query: string
+  ): Promise<{ data?: IpLookupResponse; error?: ErrorResponse }> {
+    const response = await fetch(`${this.endpoint}/ip/${query}`);
+    if (response.ok) {
+      return { data: (await response.json()) as IpLookupResponse };
     }
     return {
       error: (await response.json()) as ErrorResponse,
@@ -172,7 +192,7 @@ export class McUtilsAPI {
   async fetchPlayerSkin(
     id: string
   ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/skin/texture/${id}.png`);
+    const response = await fetch(`${this.endpoint}/skin/${id}/texture.png`);
     if (response.ok) {
       return { image: await response.arrayBuffer() };
     }
@@ -186,15 +206,15 @@ export class McUtilsAPI {
    *
    * @param id the UUID or username of the player (eg: ImFascinated)
    * @param part the skin part to fetch (eg: head)
-   * @param size the image size (default: 256)
-   * @param overlays whether to render skin overlay layers (default: false)
+   * @param size the image size (default: 768)
+   * @param overlays whether to render skin overlay layers (default: true)
    * @returns the skin part PNG image or the error (if one occurred)
    */
   async fetchPlayerSkinPart(
     id: string,
     part: string,
-    size = 256,
-    overlays = false
+    size = 768,
+    overlays = true
   ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
     const response = await fetch(
       `${this.endpoint}/skin/${id}/${part}.png${this.buildParams({ size: String(size), overlays: String(overlays) })}`
@@ -208,15 +228,15 @@ export class McUtilsAPI {
   }
 
   /**
-   * Fetch a player's cape image.
+   * Fetch a cape texture image by cape texture id.
    *
-   * @param id the UUID or username of the player (eg: ImFascinated)
+   * @param id the cape texture id (eg: from player.cape or a texture hash)
    * @returns the cape PNG image or the error (if one occurred)
    */
   async fetchPlayerCape(
     id: string
   ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/cape/texture/${id}.png`);
+    const response = await fetch(`${this.endpoint}/cape/${id}/texture.png`);
     if (response.ok) {
       return { image: await response.arrayBuffer() };
     }
