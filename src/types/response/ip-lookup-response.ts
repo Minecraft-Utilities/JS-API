@@ -3,6 +3,7 @@ import type { AsnLookup } from "../server/server";
 
 export type IpLookup = {
   ip: string;
-  location: GeoLocation | null;
-  asn: AsnLookup | null;
+  hostname?: string;
+  location?: GeoLocation | null;
+  asn?: AsnLookup | null;
 };
