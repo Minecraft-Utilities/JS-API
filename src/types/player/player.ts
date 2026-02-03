@@ -24,7 +24,7 @@ export type Player = {
   uniqueId: string;
   username: string;
   legacyAccount: boolean;
-  skin?: Skin | null;
-  cape?: Cape | null;
+  skin: Skin;
+  cape?: Cape;
   rawProperties?: ProfileProperty[];
 };
