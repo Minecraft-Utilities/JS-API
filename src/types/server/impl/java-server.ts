@@ -2,13 +2,14 @@ import type { Server } from "../server";
 
 export interface JavaServer extends Server {
   version: ServerVersion;
-  favicon: ServerFavicon | null;
+  favicon?: ServerFavicon;
   modInfo?: ForgeModInfo;
   forgeData?: ForgeData;
   preventsChatReports: boolean;
   enforcesSecureChat: boolean;
   previewsChat: boolean;
   mojangBlocked: boolean;
+  isModded: boolean;
 }
 
 export type ServerVersion = {

@@ -9,8 +9,8 @@ export interface Server extends Cache {
   players: ServerPlayers;
   records: DnsRecord[];
   reverseDns?: string;
-  location?: GeoLocation | null;
-  asn?: AsnLookup | null;
+  location?: GeoLocation;
+  asn?: AsnLookup;
 }
 
 export type ServerMotd = {
