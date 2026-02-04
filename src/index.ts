@@ -189,7 +189,7 @@ export class McUtilsAPI {
    * @param id the UUID or username of the player (eg: ImFascinated)
    * @returns the skin PNG image or the error (if one occurred)
    */
-  async fetchPlayerSkin(
+  async fetchPlayerSkinTexture(
     id: string
   ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
     const response = await fetch(`${this.endpoint}/skin/${id}/texture.png`);
@@ -210,7 +210,7 @@ export class McUtilsAPI {
    * @param overlays whether to render skin overlay layers (default: true)
    * @returns the skin part PNG image or the error (if one occurred)
    */
-  async fetchPlayerSkinPart(
+  async fetchPlayerSkin(
     id: string,
     part: string,
     size = 768,
@@ -233,7 +233,7 @@ export class McUtilsAPI {
    * @param id the cape texture id (eg: from player.cape or a texture hash)
    * @returns the cape PNG image or the error (if one occurred)
    */
-  async fetchPlayerCape(
+  async fetchPlayerCapeTexture(
     id: string
   ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
     const response = await fetch(`${this.endpoint}/cape/${id}/texture.png`);
