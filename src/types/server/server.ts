@@ -18,7 +18,6 @@ export type ServerMotd = {
   clean: string[];
   html: string[];
   preview: string;
-  htmlPreview: string;
 };
 
 export type ServerPlayerSampleName = {
