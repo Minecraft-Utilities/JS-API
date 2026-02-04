@@ -8,7 +8,6 @@ export interface Server extends Cache {
   motd: ServerMotd;
   players: ServerPlayers;
   records: DnsRecord[];
-  reverseDns?: string;
   location?: GeoLocation;
   asn?: AsnLookup;
 }
