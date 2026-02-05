@@ -1,6 +1,7 @@
 import { CapePart } from "./cape-part";
 
 export type Cape = {
+  textureId: string;
   textureUrl: string;
   parts: Record<CapePart, string>;
 };
