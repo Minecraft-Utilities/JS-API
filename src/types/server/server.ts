@@ -1,6 +1,8 @@
 import type { Cache } from "../cache/cache";
 import type { DnsRecord } from "../dns/dns-record";
 
+export type ServerType = "java" | "bedrock";
+
 export interface Server extends Cache {
   hostname: string;
   ip: string;

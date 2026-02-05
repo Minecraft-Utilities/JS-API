@@ -5,6 +5,7 @@ import type { BedrockServer } from "./types/server/impl/bedrock-server";
 import type { JavaServer } from "./types/server/impl/java-server";
 import type { CachedPlayer } from "./types/cache/cached-player";
 import type { CachedPlayerName } from "./types/cache/cached-player-name";
+import { ServerType } from "./types/server/server";
 
 export class McUtilsAPI {
   private readonly endpoint: string;
@@ -22,6 +23,28 @@ export class McUtilsAPI {
   buildParams(params: Record<string, string>): string {
     const str = new URLSearchParams(params).toString();
     return str ? `?${str}` : "";
+  }
+
+  /**
+   * Fetch a Minecraft server.
+   *
+   * @param host the host to fetch the server using (eg: aetheria.cc)
+   * @param type the type of server to fetch (eg: java or bedrock)
+   * @returns the server or the error (if one occurred)
+   */
+  async fetchServer(
+    host: string,
+    type: ServerType
+  ): Promise<{ server?: JavaServer | BedrockServer; error?: ErrorResponse }> {
+    const response = await fetch(`${this.endpoint}/server/${type}/${host}`);
+    if (response.ok) {
+      return {
+        server: (await response.json()) as JavaServer | BedrockServer,
+      };
+    }
+    return {
+      error: (await response.json()) as ErrorResponse,
+    };
   }
 
   /**
