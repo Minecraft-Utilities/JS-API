@@ -1,0 +1,1 @@
+export type SkinPart = "HEAD" | "FULLBODY_FRONT" | "FULLBODY_BACK" | "FACE" | "BODY";

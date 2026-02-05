@@ -1,0 +1,1 @@
+export type SkinModel = "DEFAULT" | "SLIM";

@@ -1,22 +1,6 @@
-import { Cape } from "../cape/cape";
-
-export type SkinModel = "DEFAULT" | "SLIM";
-export type SkinPart = "HEAD" | "FULLBODY_FRONT" | "FULLBODY_BACK" | "FACE" | "BODY";
-
-export type SkinParts = Record<SkinPart, string>;
-
-export type Skin = {
-  model: SkinModel;
-  legacy: boolean;
-  textureUrl: string;
-  parts: SkinParts;
-};
-
-export type ProfileProperty = {
-  name: string;
-  value: string;
-  signature?: string;
-};
+import { Cape } from "./cape/cape";
+import { ProfileProperty } from "./profile-property";
+import { Skin } from "./skin/skin";
 
 export type Player = {
   uniqueId: string;
