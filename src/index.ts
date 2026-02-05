@@ -251,15 +251,39 @@ export class McUtilsAPI {
   }
 
   /**
-   * Fetch a cape texture image by cape texture id.
+   * Fetch a cape texture image.
    *
-   * @param id the cape texture id (eg: from player.cape or a texture hash)
+   * @param query player UUID/username or 64-char cape texture id
    * @returns the cape PNG image or the error (if one occurred)
    */
-  async fetchPlayerCapeTexture(
-    id: string
+  async fetchCapeTexture(
+    query: string
   ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/cape/${id}/texture.png`);
+    const response = await fetch(`${this.endpoint}/cape/${query}/texture.png`);
+    if (response.ok) {
+      return { image: await response.arrayBuffer() };
+    }
+    return {
+      error: (await response.json()) as ErrorResponse,
+    };
+  }
+
+  /**
+   * Fetch a rendered cape part (e.g. front).
+   *
+   * @param query player UUID/username or 64-char cape texture id
+   * @param type cape part (e.g. front) – see CapeRendererType
+   * @param size image height (default 768)
+   * @returns the cape part PNG image or the error (if one occurred)
+   */
+  async fetchCapePart(
+    query: string,
+    type: string,
+    size = 768
+  ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
+    const response = await fetch(
+      `${this.endpoint}/cape/${query}/${type}.png${this.buildParams({ size: String(size) })}`
+    );
     if (response.ok) {
       return { image: await response.arrayBuffer() };
     }

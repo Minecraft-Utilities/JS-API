@@ -1,6 +1,6 @@
 {
   "name": "mcutils-js-api",
-  "version": "2.0.17",
+  "version": "2.0.18",
   "module": "dist/index.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

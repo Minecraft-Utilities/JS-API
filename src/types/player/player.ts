@@ -1,6 +1,8 @@
-export type SkinModel = "DEFAULT" | "SLIM";
+import { Cape } from "../cape/cape";
 
+export type SkinModel = "DEFAULT" | "SLIM";
 export type SkinPart = "HEAD" | "FULLBODY_FRONT" | "FULLBODY_BACK" | "FACE" | "BODY";
+
 export type SkinParts = Record<SkinPart, string>;
 
 export type Skin = {
@@ -8,10 +10,6 @@ export type Skin = {
   legacy: boolean;
   textureUrl: string;
   parts: SkinParts;
-};
-
-export type Cape = {
-  textureUrl: string;
 };
 
 export type ProfileProperty = {
