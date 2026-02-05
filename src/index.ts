@@ -5,6 +5,7 @@ import type { BedrockServer } from "./types/server/impl/bedrock-server";
 import type { JavaServer } from "./types/server/impl/java-server";
 import type { CachedPlayer } from "./types/cache/cached-player";
 import type { CachedPlayerName } from "./types/cache/cached-player-name";
+import type { CapeData } from "./types/player/cape/cape";
 import { ServerType } from "./types/server/server";
 
 export class McUtilsAPI {
@@ -36,7 +37,7 @@ export class McUtilsAPI {
     host: string,
     type: ServerType
   ): Promise<{ server?: JavaServer | BedrockServer; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/server/${type}/${host}`);
+    const response = await fetch(`${this.endpoint}/servers/${type}/${host}`);
     if (response.ok) {
       return {
         server: (await response.json()) as JavaServer | BedrockServer,
@@ -56,7 +57,7 @@ export class McUtilsAPI {
   async fetchJavaServer(
     host: string
   ): Promise<{ server?: JavaServer; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/server/java/${host}`);
+    const response = await fetch(`${this.endpoint}/servers/java/${host}`);
     if (response.ok) {
       return {
         server: (await response.json()) as JavaServer,
@@ -76,7 +77,7 @@ export class McUtilsAPI {
   async fetchBedrockServer(
     host: string
   ): Promise<{ server?: BedrockServer; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/server/bedrock/${host}`);
+    const response = await fetch(`${this.endpoint}/servers/bedrock/${host}`);
     if (response.ok) {
       return {
         server: (await response.json()) as BedrockServer,
@@ -96,7 +97,7 @@ export class McUtilsAPI {
   async fetchServerBlocked(
     host: string
   ): Promise<{ blocked?: boolean; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/server/blocked/${host}`);
+    const response = await fetch(`${this.endpoint}/servers/blocked/${host}`);
     if (response.ok) {
       const json = (await response.json()) as ServerBlockedResponse;
       return { blocked: json.blocked };
@@ -115,7 +116,7 @@ export class McUtilsAPI {
   async fetchIpLookup(
     query: string
   ): Promise<{ data?: IpLookup; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/ip/${query}`);
+    const response = await fetch(`${this.endpoint}/ips/${query}`);
     if (response.ok) {
       return { data: (await response.json()) as IpLookup };
     }
@@ -133,7 +134,7 @@ export class McUtilsAPI {
   async fetchPlayer(
     id: string
   ): Promise<{ player?: CachedPlayer; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/player/${id}`);
+    const response = await fetch(`${this.endpoint}/players/${id}`);
     if (response.ok) {
       return {
         player: (await response.json()) as CachedPlayer,
@@ -153,7 +154,7 @@ export class McUtilsAPI {
   async fetchPlayerUuid(
     id: string
   ): Promise<{ playerName?: CachedPlayerName; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/player/uuid/${id}`);
+    const response = await fetch(`${this.endpoint}/players/uuid/${id}`);
     if (response.ok) {
       return {
         playerName: (await response.json()) as CachedPlayerName,
@@ -173,7 +174,7 @@ export class McUtilsAPI {
   async fetchServerIcon(
     host: string
   ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/server/icon/${host}`);
+    const response = await fetch(`${this.endpoint}/servers/icon/${host}`);
     if (response.ok) {
       return { image: await response.arrayBuffer() };
     }
@@ -196,7 +197,7 @@ export class McUtilsAPI {
     size = 768
   ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
     const response = await fetch(
-      `${this.endpoint}/server/${platform}/preview/${host}${this.buildParams({ size: String(size) })}`
+      `${this.endpoint}/servers/${platform}/preview/${host}${this.buildParams({ size: String(size) })}`
     );
     if (response.ok) {
       return { image: await response.arrayBuffer() };
@@ -215,7 +216,7 @@ export class McUtilsAPI {
   async fetchPlayerSkinTexture(
     id: string
   ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/skin/${id}/texture.png`);
+    const response = await fetch(`${this.endpoint}/skins/${id}/texture.png`);
     if (response.ok) {
       return { image: await response.arrayBuffer() };
     }
@@ -240,10 +241,28 @@ export class McUtilsAPI {
     overlays = true
   ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
     const response = await fetch(
-      `${this.endpoint}/skin/${id}/${part}.png${this.buildParams({ size: String(size), overlays: String(overlays) })}`
+      `${this.endpoint}/skins/${id}/${part}.png${this.buildParams({ size: String(size), overlays: String(overlays) })}`
     );
     if (response.ok) {
       return { image: await response.arrayBuffer() };
+    }
+    return {
+      error: (await response.json()) as ErrorResponse,
+    };
+  }
+
+  /**
+   * Fetch the list of available capes (e.g. Migrator).
+   *
+   * @returns the list of cape data or the error (if one occurred)
+   */
+  async fetchCapes(): Promise<{
+    capes?: CapeData[];
+    error?: ErrorResponse;
+  }> {
+    const response = await fetch(`${this.endpoint}/capes`);
+    if (response.ok) {
+      return { capes: (await response.json()) as CapeData[] };
     }
     return {
       error: (await response.json()) as ErrorResponse,
@@ -259,7 +278,7 @@ export class McUtilsAPI {
   async fetchCapeTexture(
     query: string
   ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/cape/${query}/texture.png`);
+    const response = await fetch(`${this.endpoint}/capes/${query}/texture.png`);
     if (response.ok) {
       return { image: await response.arrayBuffer() };
     }
@@ -282,7 +301,7 @@ export class McUtilsAPI {
     size = 768
   ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
     const response = await fetch(
-      `${this.endpoint}/cape/${query}/${type}.png${this.buildParams({ size: String(size) })}`
+      `${this.endpoint}/capes/${query}/${type}.png${this.buildParams({ size: String(size) })}`
     );
     if (response.ok) {
       return { image: await response.arrayBuffer() };
