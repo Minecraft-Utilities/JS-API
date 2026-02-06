@@ -5,8 +5,8 @@ import type { BedrockServer } from "./types/server/impl/bedrock-server";
 import type { JavaServer } from "./types/server/impl/java-server";
 import type { CachedPlayer } from "./types/cache/cached-player";
 import type { CachedPlayerName } from "./types/cache/cached-player-name";
-import type { CapeData } from "./types/player/cape/cape";
-import { ServerType } from "./types/server/server";
+import type { ServerType } from "./types/server/server";
+import type { Cape } from "./types/player/cape/cape";
 
 export class McUtilsAPI {
   private readonly endpoint: string;
@@ -257,12 +257,12 @@ export class McUtilsAPI {
    * @returns the list of cape data or the error (if one occurred)
    */
   async fetchCapes(): Promise<{
-    capes?: CapeData[];
+    capes?: Cape[];
     error?: ErrorResponse;
   }> {
     const response = await fetch(`${this.endpoint}/capes`);
     if (response.ok) {
-      return { capes: (await response.json()) as CapeData[] };
+      return { capes: (await response.json()) as Cape[] };
     }
     return {
       error: (await response.json()) as ErrorResponse,
