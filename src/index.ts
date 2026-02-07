@@ -5,7 +5,7 @@ import type { BedrockServer } from "./types/server/impl/bedrock-server";
 import type { JavaServer } from "./types/server/impl/java-server";
 import type { CachedPlayer } from "./types/cache/cached-player";
 import type { CachedPlayerName } from "./types/cache/cached-player-name";
-import type { ServerType } from "./types/server/server";
+import type { ServerPlatform } from "./types/server/server";
 import type { Cape } from "./types/player/cape/cape";
 
 export class McUtilsAPI {
@@ -35,7 +35,7 @@ export class McUtilsAPI {
    */
   async fetchServer(
     host: string,
-    type: ServerType
+    type: ServerPlatform
   ): Promise<{ server?: JavaServer | BedrockServer; error?: ErrorResponse }> {
     const response = await fetch(`${this.endpoint}/servers/${type}/${host}`);
     if (response.ok) {

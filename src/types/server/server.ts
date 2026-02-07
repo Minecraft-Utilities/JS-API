@@ -1,7 +1,8 @@
 import type { Cache } from "../cache/cache";
 import type { DnsRecord } from "../dns/dns-record";
+import { ServerRegistryEntry } from "../server-registry/server-registry-entry";
 
-export type ServerType = "java" | "bedrock";
+export type ServerPlatform = "java" | "bedrock";
 
 export interface Server extends Cache {
   hostname: string;
@@ -12,6 +13,7 @@ export interface Server extends Cache {
   records: DnsRecord[];
   location?: GeoLocation;
   asn?: AsnLookup;
+  registryEntry?: ServerRegistryEntry;
 }
 
 export type ServerMotd = {
