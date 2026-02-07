@@ -1,8 +1,10 @@
 import { ServerPlatform } from "../server/server";
 
 export type ServerRegistryEntry = {
-    serverName: string;
+    serverId: string;
+    displayName: string;
     hostnames: string[];
     wildcardHostnames: string[];
+    backgroundImageUrl: string;
     platform: ServerPlatform;
 }
