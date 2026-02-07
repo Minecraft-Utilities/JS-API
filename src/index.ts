@@ -7,6 +7,7 @@ import type { CachedPlayer } from "./types/cache/cached-player";
 import type { CachedPlayerName } from "./types/cache/cached-player-name";
 import type { ServerPlatform } from "./types/server/server";
 import type { Cape } from "./types/player/cape/cape";
+import { ServerRegistryEntry } from "./types/server-registry/server-registry-entry";
 
 export class McUtilsAPI {
   private readonly endpoint: string;
@@ -305,6 +306,22 @@ export class McUtilsAPI {
     );
     if (response.ok) {
       return { image: await response.arrayBuffer() };
+    }
+    return {
+      error: (await response.json()) as ErrorResponse,
+    };
+  }
+
+  /**
+   * Fetch the list of available server registry entries.
+   *
+   * @param query the query to search for (eg: aetheria)
+   * @returns the list of server registry entries or the error (if one occurred)
+   */
+  async fetchServerRegistryEntries(query: string): Promise<{ entries?: ServerRegistryEntry[]; error?: ErrorResponse }> {
+    const response = await fetch(`${this.endpoint}/servers${this.buildParams({ query: query })}`);
+    if (response.ok) {
+      return { entries: (await response.json()) as ServerRegistryEntry[] };
     }
     return {
       error: (await response.json()) as ErrorResponse,
