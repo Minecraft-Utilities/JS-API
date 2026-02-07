@@ -8,5 +8,6 @@ export type Player = {
   legacyAccount: boolean;
   skin: Skin;
   cape?: Cape;
+  optifineCape?: Cape;
   rawProperties?: ProfileProperty[];
 };
