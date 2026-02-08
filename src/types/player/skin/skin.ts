@@ -7,4 +7,5 @@ export type Skin = {
     legacy: boolean;
     textureUrl: string;
     parts: Record<SkinPart, string>;
+    accountsUsed: number;
 };
