@@ -133,12 +133,14 @@ export class McUtilsAPI {
    * Fetch a player by UUID or username.
    *
    * @param id the UUID or username of the player (eg: ImFascinated)
+   * @param fetchOptifineCape whether to fetch the optifine cape (default: true)
    * @returns the player or the error (if one occurred)
    */
   async fetchPlayer(
-    id: string
+    id: string,
+    fetchOptifineCape: boolean = true
   ): Promise<{ player?: Player; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/players/${id}`);
+    const response = await fetch(`${this.endpoint}/players/${id}${this.buildParams({ fetchOptifineCape: String(fetchOptifineCape) })}`);
     if (response.ok) {
       return {
         player: (await response.json()) as Player,
