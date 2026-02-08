@@ -1,5 +1,4 @@
 import { Cape } from "./cape/cape";
-import { ProfileProperty } from "./profile-property";
 import { Skin } from "./skin/skin";
 
 export type Player = {
@@ -9,5 +8,4 @@ export type Player = {
   skin: Skin;
   cape?: Cape;
   optifineCape?: Cape;
-  rawProperties?: ProfileProperty[];
 };

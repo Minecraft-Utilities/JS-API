@@ -3,11 +3,11 @@ import type { ServerBlockedResponse } from "./types/response/server-blocked-resp
 import type { IpLookup } from "./types/response/ip-lookup-response";
 import type { BedrockServer } from "./types/server/impl/bedrock-server";
 import type { JavaServer } from "./types/server/impl/java-server";
-import type { CachedPlayer } from "./types/cache/cached-player";
-import type { CachedPlayerName } from "./types/cache/cached-player-name";
 import type { ServerPlatform } from "./types/server/server";
 import type { Cape } from "./types/player/cape/cape";
 import { ServerRegistryEntry } from "./types/server-registry/server-registry-entry";
+import { Player } from "./types/player/player";
+import { CachedPlayerName } from "./types/cache/cached-player-name";
 
 export class McUtilsAPI {
   private readonly endpoint: string;
@@ -134,11 +134,11 @@ export class McUtilsAPI {
    */
   async fetchPlayer(
     id: string
-  ): Promise<{ player?: CachedPlayer; error?: ErrorResponse }> {
+  ): Promise<{ player?: Player; error?: ErrorResponse }> {
     const response = await fetch(`${this.endpoint}/players/${id}`);
     if (response.ok) {
       return {
-        player: (await response.json()) as CachedPlayer,
+        player: (await response.json()) as Player,
       };
     }
     return {
