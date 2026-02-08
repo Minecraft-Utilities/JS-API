@@ -6,6 +6,8 @@ export type Player = {
   username: string;
   legacyAccount: boolean;
   skin: Skin;
+  skinHistory: Skin[];
   cape?: Cape;
+  capeHistory?: Cape[];
   optifineCape?: Cape;
 };
