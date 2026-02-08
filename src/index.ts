@@ -9,6 +9,8 @@ import { ServerRegistryEntry } from "./types/server-registry/server-registry-ent
 import { Player } from "./types/player/player";
 import { CachedPlayerName } from "./types/cache/cached-player-name";
 import { StatisticsResponse } from "./types/response/statistics-response";
+import { Skin } from "./types/player/skin/skin";
+import { Page } from "./types/pagination/pagination";
 
 export class McUtilsAPI {
   private readonly endpoint: string;
@@ -338,6 +340,22 @@ export class McUtilsAPI {
     const response = await fetch(`${this.endpoint}/statistics`);
     if (response.ok) {
       return { statistics: (await response.json()) as StatisticsResponse };
+    }
+    return {
+      error: (await response.json()) as ErrorResponse,
+    };
+  }
+
+  /**
+   * Fetch the list of available skins.
+   *
+   * @param page the page to fetch (default: 1)
+   * @returns the list of skins or the error (if one occurred)
+   */
+  async fetchSkins(page: number = 1): Promise<{ skins?: Page<Skin>; error?: ErrorResponse }> {
+    const response = await fetch(`${this.endpoint}/skins${this.buildParams({ page: String(page) })}`);
+    if (response.ok) {
+      return { skins: (await response.json()) as Page<Skin> };
     }
     return {
       error: (await response.json()) as ErrorResponse,
