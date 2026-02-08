@@ -8,6 +8,7 @@ import type { Cape } from "./types/player/cape/cape";
 import { ServerRegistryEntry } from "./types/server-registry/server-registry-entry";
 import { Player } from "./types/player/player";
 import { CachedPlayerName } from "./types/cache/cached-player-name";
+import { StatisticsResponse } from "./types/response/statistics-response";
 
 export class McUtilsAPI {
   private readonly endpoint: string;
@@ -322,6 +323,21 @@ export class McUtilsAPI {
     const response = await fetch(`${this.endpoint}/servers${this.buildParams({ query: query })}`);
     if (response.ok) {
       return { entries: (await response.json()) as ServerRegistryEntry[] };
+    }
+    return {
+      error: (await response.json()) as ErrorResponse,
+    };
+  }
+
+  /**
+   * Fetch the statistics of the API.
+   *
+   * @returns the statistics or the error (if one occurred)
+   */
+  async fetchStatistics(): Promise<{ statistics?: StatisticsResponse; error?: ErrorResponse }> {
+    const response = await fetch(`${this.endpoint}/statistics`);
+    if (response.ok) {
+      return { statistics: (await response.json()) as StatisticsResponse };
     }
     return {
       error: (await response.json()) as ErrorResponse,
