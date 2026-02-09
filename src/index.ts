@@ -12,11 +12,42 @@ import { StatisticsResponse } from "./types/response/statistics-response";
 import { Skin } from "./types/player/skin/skin";
 import { Page } from "./types/pagination/pagination";
 
+type RequestOptions = RequestInit & { responseType?: "json" | "arrayBuffer" };
+
 export class McUtilsAPI {
   private readonly endpoint: string;
+  private readonly fetchOptions?: RequestInit;
 
-  constructor(endpoint: string = "https://mc.fascinated.cc/api") {
+  constructor(
+    endpoint: string = "https://mc.fascinated.cc/api",
+    fetchOptions?: RequestInit
+  ) {
     this.endpoint = endpoint;
+    this.fetchOptions = fetchOptions;
+  }
+
+  /**
+   * Requests data from the API.
+   *
+   * @param path the path to the API endpoint
+   * @param options the options for the request
+   * @returns the data or the error (if one occurred)
+   */
+  private async request<T>(
+    path: string,
+    options?: RequestOptions
+  ): Promise<{ data?: T; error?: ErrorResponse }> {
+    const { responseType = "json", ...init } = options ?? {};
+    const url = path.startsWith("http") ? path : `${this.endpoint}${path}`;
+    const response = await fetch(url, { ...this.fetchOptions, ...init });
+
+    if (!response.ok) {
+      return { error: (await response.json()) as ErrorResponse };
+    }
+
+    const data =
+      responseType === "arrayBuffer" ? await response.arrayBuffer() : await response.json();
+    return { data: data as T };
   }
 
   /**
@@ -41,15 +72,10 @@ export class McUtilsAPI {
     host: string,
     type: ServerPlatform
   ): Promise<{ server?: JavaServer | BedrockServer; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/servers/${type}/${host}`);
-    if (response.ok) {
-      return {
-        server: (await response.json()) as JavaServer | BedrockServer,
-      };
-    }
-    return {
-      error: (await response.json()) as ErrorResponse,
-    };
+    const { data, error } = await this.request<JavaServer | BedrockServer>(
+      `/servers/${type}/${host}`
+    );
+    return error ? { error } : { server: data };
   }
 
   /**
@@ -61,15 +87,8 @@ export class McUtilsAPI {
   async fetchJavaServer(
     host: string
   ): Promise<{ server?: JavaServer; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/servers/java/${host}`);
-    if (response.ok) {
-      return {
-        server: (await response.json()) as JavaServer,
-      };
-    }
-    return {
-      error: (await response.json()) as ErrorResponse,
-    };
+    const { data, error } = await this.request<JavaServer>(`/servers/java/${host}`);
+    return error ? { error } : { server: data };
   }
 
   /**
@@ -81,15 +100,10 @@ export class McUtilsAPI {
   async fetchBedrockServer(
     host: string
   ): Promise<{ server?: BedrockServer; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/servers/bedrock/${host}`);
-    if (response.ok) {
-      return {
-        server: (await response.json()) as BedrockServer,
-      };
-    }
-    return {
-      error: (await response.json()) as ErrorResponse,
-    };
+    const { data, error } = await this.request<BedrockServer>(
+      `/servers/bedrock/${host}`
+    );
+    return error ? { error } : { server: data };
   }
 
   /**
@@ -101,14 +115,11 @@ export class McUtilsAPI {
   async fetchServerBlocked(
     host: string
   ): Promise<{ blocked?: boolean; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/servers/blocked/${host}`);
-    if (response.ok) {
-      const json = (await response.json()) as ServerBlockedResponse;
-      return { blocked: json.blocked };
-    }
-    return {
-      error: (await response.json()) as ErrorResponse,
-    };
+    const { data, error } = await this.request<ServerBlockedResponse>(
+      `/servers/blocked/${host}`
+    );
+    if (error) return { error };
+    return { blocked: data!.blocked };
   }
 
   /**
@@ -120,13 +131,7 @@ export class McUtilsAPI {
   async fetchIpLookup(
     query: string
   ): Promise<{ data?: IpLookup; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/ips/${query}`);
-    if (response.ok) {
-      return { data: (await response.json()) as IpLookup };
-    }
-    return {
-      error: (await response.json()) as ErrorResponse,
-    };
+    return this.request<IpLookup>(`/ips/${query}`);
   }
 
   /**
@@ -138,15 +143,8 @@ export class McUtilsAPI {
   async fetchPlayer(
     id: string
   ): Promise<{ player?: Player; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/players/${id}`);
-    if (response.ok) {
-      return {
-        player: (await response.json()) as Player,
-      };
-    }
-    return {
-      error: (await response.json()) as ErrorResponse,
-    };
+    const { data, error } = await this.request<Player>(`/players/${id}`);
+    return error ? { error } : { player: data };
   }
 
   /**
@@ -158,15 +156,10 @@ export class McUtilsAPI {
   async fetchPlayerUuid(
     id: string
   ): Promise<{ playerName?: CachedPlayerName; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/players/uuid/${id}`);
-    if (response.ok) {
-      return {
-        playerName: (await response.json()) as CachedPlayerName,
-      };
-    }
-    return {
-      error: (await response.json()) as ErrorResponse,
-    };
+    const { data, error } = await this.request<CachedPlayerName>(
+      `/players/uuid/${id}`
+    );
+    return error ? { error } : { playerName: data };
   }
 
   /**
@@ -178,13 +171,11 @@ export class McUtilsAPI {
   async fetchServerIcon(
     host: string
   ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/servers/icon/${host}`);
-    if (response.ok) {
-      return { image: await response.arrayBuffer() };
-    }
-    return {
-      error: (await response.json()) as ErrorResponse,
-    };
+    const { data, error } = await this.request<ArrayBuffer>(
+      `/servers/icon/${host}`,
+      { responseType: "arrayBuffer" }
+    );
+    return error ? { error } : { image: data };
   }
 
   /**
@@ -200,15 +191,11 @@ export class McUtilsAPI {
     host: string,
     size = 768
   ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
-    const response = await fetch(
-      `${this.endpoint}/servers/${platform}/preview/${host}${this.buildParams({ size: String(size) })}`
+    const { data, error } = await this.request<ArrayBuffer>(
+      `/servers/${platform}/preview/${host}${this.buildParams({ size: String(size) })}`,
+      { responseType: "arrayBuffer" }
     );
-    if (response.ok) {
-      return { image: await response.arrayBuffer() };
-    }
-    return {
-      error: (await response.json()) as ErrorResponse,
-    };
+    return error ? { error } : { image: data };
   }
 
   /**
@@ -220,13 +207,11 @@ export class McUtilsAPI {
   async fetchPlayerSkinTexture(
     id: string
   ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/skins/${id}/texture.png`);
-    if (response.ok) {
-      return { image: await response.arrayBuffer() };
-    }
-    return {
-      error: (await response.json()) as ErrorResponse,
-    };
+    const { data, error } = await this.request<ArrayBuffer>(
+      `/skins/${id}/texture.png`,
+      { responseType: "arrayBuffer" }
+    );
+    return error ? { error } : { image: data };
   }
 
   /**
@@ -244,15 +229,11 @@ export class McUtilsAPI {
     size = 768,
     overlays = true
   ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
-    const response = await fetch(
-      `${this.endpoint}/skins/${id}/${part}.png${this.buildParams({ size: String(size), overlays: String(overlays) })}`
+    const { data, error } = await this.request<ArrayBuffer>(
+      `/skins/${id}/${part}.png${this.buildParams({ size: String(size), overlays: String(overlays) })}`,
+      { responseType: "arrayBuffer" }
     );
-    if (response.ok) {
-      return { image: await response.arrayBuffer() };
-    }
-    return {
-      error: (await response.json()) as ErrorResponse,
-    };
+    return error ? { error } : { image: data };
   }
 
   /**
@@ -264,13 +245,8 @@ export class McUtilsAPI {
     capes?: Cape[];
     error?: ErrorResponse;
   }> {
-    const response = await fetch(`${this.endpoint}/capes`);
-    if (response.ok) {
-      return { capes: (await response.json()) as Cape[] };
-    }
-    return {
-      error: (await response.json()) as ErrorResponse,
-    };
+    const { data, error } = await this.request<Cape[]>(`/capes`);
+    return error ? { error } : { capes: data };
   }
 
   /**
@@ -282,13 +258,11 @@ export class McUtilsAPI {
   async fetchCapeTexture(
     query: string
   ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/capes/${query}/texture.png`);
-    if (response.ok) {
-      return { image: await response.arrayBuffer() };
-    }
-    return {
-      error: (await response.json()) as ErrorResponse,
-    };
+    const { data, error } = await this.request<ArrayBuffer>(
+      `/capes/${query}/texture.png`,
+      { responseType: "arrayBuffer" }
+    );
+    return error ? { error } : { image: data };
   }
 
   /**
@@ -304,15 +278,11 @@ export class McUtilsAPI {
     type: string,
     size = 768
   ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
-    const response = await fetch(
-      `${this.endpoint}/capes/${query}/${type}.png${this.buildParams({ size: String(size) })}`
+    const { data, error } = await this.request<ArrayBuffer>(
+      `/capes/${query}/${type}.png${this.buildParams({ size: String(size) })}`,
+      { responseType: "arrayBuffer" }
     );
-    if (response.ok) {
-      return { image: await response.arrayBuffer() };
-    }
-    return {
-      error: (await response.json()) as ErrorResponse,
-    };
+    return error ? { error } : { image: data };
   }
 
   /**
@@ -322,13 +292,10 @@ export class McUtilsAPI {
    * @returns the list of server registry entries or the error (if one occurred)
    */
   async fetchServerRegistryEntries(query: string): Promise<{ entries?: ServerRegistryEntry[]; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/servers${this.buildParams({ query: query })}`);
-    if (response.ok) {
-      return { entries: (await response.json()) as ServerRegistryEntry[] };
-    }
-    return {
-      error: (await response.json()) as ErrorResponse,
-    };
+    const { data, error } = await this.request<ServerRegistryEntry[]>(
+      `/servers${this.buildParams({ query: query })}`
+    );
+    return error ? { error } : { entries: data };
   }
 
   /**
@@ -337,13 +304,8 @@ export class McUtilsAPI {
    * @returns the statistics or the error (if one occurred)
    */
   async fetchStatistics(): Promise<{ statistics?: StatisticsResponse; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/statistics`);
-    if (response.ok) {
-      return { statistics: (await response.json()) as StatisticsResponse };
-    }
-    return {
-      error: (await response.json()) as ErrorResponse,
-    };
+    const { data, error } = await this.request<StatisticsResponse>(`/statistics`);
+    return error ? { error } : { statistics: data };
   }
 
   /**
@@ -353,13 +315,10 @@ export class McUtilsAPI {
    * @returns the list of skins or the error (if one occurred)
    */
   async fetchSkins(page: number = 1): Promise<{ skins?: Page<Skin>; error?: ErrorResponse }> {
-    const response = await fetch(`${this.endpoint}/skins${this.buildParams({ page: String(page) })}`);
-    if (response.ok) {
-      return { skins: (await response.json()) as Page<Skin> };
-    }
-    return {
-      error: (await response.json()) as ErrorResponse,
-    };
+    const { data, error } = await this.request<Page<Skin>>(
+      `/skins${this.buildParams({ page: String(page) })}`
+    );
+    return error ? { error } : { skins: data };
   }
 }
 
