@@ -11,6 +11,7 @@ import { CachedPlayerName } from "./types/cache/cached-player-name";
 import { StatisticsResponse } from "./types/response/statistics-response";
 import { Skin } from "./types/player/skin/skin";
 import { Page } from "./types/pagination/pagination";
+import { PlayerSearchEntry } from "./types/player/player-search-entry";
 
 type RequestOptions = RequestInit & { responseType?: "json" | "arrayBuffer" };
 
@@ -319,6 +320,17 @@ export class McUtilsAPI {
       `/skins${this.buildParams({ page: String(page) })}`
     );
     return error ? { error } : { skins: data };
+  }
+
+  /**
+   * Search for players by username.
+   *
+   * @param query the query to search for (eg: aetheria)
+   * @returns the player search entry or the error (if one occurred)
+   */
+  async searchPlayers(query: string): Promise<{ entry?: PlayerSearchEntry; error?: ErrorResponse }> {
+    const { data, error } = await this.request<PlayerSearchEntry>(`/players/search/${query}`);
+    return error ? { error } : { entry: data };
   }
 }
 
