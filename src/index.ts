@@ -329,7 +329,7 @@ export class McUtilsAPI {
    * @returns the player search entry or the error (if one occurred)
    */
   async searchPlayers(query: string): Promise<{ entry?: PlayerSearchEntry; error?: ErrorResponse }> {
-    const { data, error } = await this.request<PlayerSearchEntry>(`/players/search/${query}`);
+    const { data, error } = await this.request<PlayerSearchEntry>(`/players/search${this.buildParams({ query: query })}`);
     return error ? { error } : { entry: data };
   }
 }
