@@ -328,9 +328,9 @@ export class McUtilsAPI {
    * @param query the query to search for (eg: aetheria)
    * @returns the player search entry or the error (if one occurred)
    */
-  async searchPlayers(query: string): Promise<{ entry?: PlayerSearchEntry; error?: ErrorResponse }> {
-    const { data, error } = await this.request<PlayerSearchEntry>(`/players/search${this.buildParams({ query: query })}`);
-    return error ? { error } : { entry: data };
+  async searchPlayers(query: string): Promise<{ entries?: PlayerSearchEntry[]; error?: ErrorResponse }> {
+    const { data, error } = await this.request<PlayerSearchEntry[]>(`/players${this.buildParams({ query: query })}`);
+    return error ? { error } : { entries: data };
   }
 }
 

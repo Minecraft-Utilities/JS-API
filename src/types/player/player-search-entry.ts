@@ -1,7 +1,7 @@
 import { Skin } from "./skin/skin";
 
 export type PlayerSearchEntry = {
-    uuid: string;
+    id: string;
     username: string;
     skin: Skin;
 }
