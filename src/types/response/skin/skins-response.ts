@@ -1,4 +1,4 @@
-import { Page } from "../pagination/pagination";
+import { Page } from "../../pagination/pagination";
 
 export type SkinsResponse = {
     id: string;

@@ -12,7 +12,8 @@ import { StatisticsResponse } from "./types/response/statistics-response";
 import { Skin } from "./types/player/skin/skin";
 import { Page } from "./types/pagination/pagination";
 import { PlayerSearchEntry } from "./types/player/player-search-entry";
-import { SkinsResponsePage } from "./types/response/skins-response";
+import { SkinsResponsePage } from "./types/response/skin/skins-response";
+import { SkinDTO } from "./types/response/skin/skin-dto";
 
 type RequestOptions = RequestInit & { responseType?: "json" | "arrayBuffer" };
 
@@ -332,6 +333,17 @@ export class McUtilsAPI {
   async searchPlayers(query: string): Promise<{ entries?: PlayerSearchEntry[]; error?: ErrorResponse }> {
     const { data, error } = await this.request<PlayerSearchEntry[]>(`/players${this.buildParams({ query: query })}`);
     return error ? { error } : { entries: data };
+  }
+
+  /**
+   * Fetch the details of a specific skin.
+   *
+   * @param id the ID of the skin (UUID)
+   * @returns the skin details or the error (if one occurred)
+   */
+  async fetchSkin(id: string): Promise<{ skin?: SkinDTO; error?: ErrorResponse }> {
+    const { data, error } = await this.request<SkinDTO>(`/skins/${id}`);
+    return error ? { error } : { skin: data };
   }
 }
 
