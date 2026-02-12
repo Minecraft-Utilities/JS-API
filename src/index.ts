@@ -12,6 +12,7 @@ import { StatisticsResponse } from "./types/response/statistics-response";
 import { Skin } from "./types/player/skin/skin";
 import { Page } from "./types/pagination/pagination";
 import { PlayerSearchEntry } from "./types/player/player-search-entry";
+import { SkinsResponsePage } from "./types/response/skins-response";
 
 type RequestOptions = RequestInit & { responseType?: "json" | "arrayBuffer" };
 
@@ -315,8 +316,8 @@ export class McUtilsAPI {
    * @param page the page to fetch (default: 1)
    * @returns the list of skins or the error (if one occurred)
    */
-  async fetchSkins(page: number = 1): Promise<{ skins?: Page<Skin>; error?: ErrorResponse }> {
-    const { data, error } = await this.request<Page<Skin>>(
+  async fetchSkins(page: number = 1): Promise<{ skins?: SkinsResponsePage; error?: ErrorResponse }> {
+    const { data, error } = await this.request<SkinsResponsePage>(
       `/skins${this.buildParams({ page: String(page) })}`
     );
     return error ? { error } : { skins: data };
