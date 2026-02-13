@@ -1,1 +1,1 @@
-export type SkinPart = "HEAD" | "FULLBODY_FRONT" | "FULLBODY_BACK" | "FACE" | "BODY";
+export type SkinPart = "FACE" | "BODY" | "BACK" | "HEAD_ISO" | "FULLBODY_ISO_FRONT" | "FULLBODY_ISO_BACK";
