@@ -15,4 +15,3 @@ export type Player = {
   lastUpdated: Date;
   firstSeen: Date;
 };
-

@@ -1,6 +1,6 @@
 import { Cape } from "./cape";
 
 export type CapeHistory = Cape & {
-  firstUsed: Date;
+  firstSeen: Date;
   lastUsed: Date;
 };
