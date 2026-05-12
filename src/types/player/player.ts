@@ -12,6 +12,7 @@ export type Player = {
   cape?: Cape;
   capeHistory?: CapeHistory[];
   optifineCape?: Cape;
+  submittedUuids: number;
   lastUpdated: Date;
   firstSeen: Date;
 };
