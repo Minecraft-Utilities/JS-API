@@ -1,13 +1,12 @@
 import { CachedPlayerName } from "./types/cache/cached-player-name";
+import { Page } from "./types/pagination/pagination";
+import { Cape } from "./types/player/cape/cape";
 import { Player } from "./types/player/player";
 import { PlayerSearchEntry } from "./types/player/player-search-entry";
-import { CapeDTO } from "./types/response/cape/cape-dto";
-import { CapesResponsePage } from "./types/response/cape/capes-response";
+import { Skin } from "./types/player/skin/skin";
 import type { ErrorResponse } from "./types/response/error-response";
 import type { IpLookup } from "./types/response/ip-lookup-response";
 import type { ServerBlockedResponse } from "./types/response/server-blocked-response";
-import { SkinDTO } from "./types/response/skin/skin-dto";
-import { SkinsResponsePage } from "./types/response/skin/skins-response";
 import { StatisticsResponse } from "./types/response/statistics-response";
 import { ServerRegistryEntry } from "./types/server-registry/server-registry-entry";
 import type { BedrockServer } from "./types/server/impl/bedrock-server";
@@ -209,8 +208,8 @@ export class McUtilsAPI {
    * @param page the page to fetch (default: 1)
    * @returns the page of capes or the error (if one occurred)
    */
-  async fetchCapes(page: number = 1): Promise<{ capes?: CapesResponsePage; error?: ErrorResponse }> {
-    const { data, error } = await this.request<CapesResponsePage>(`/capes${this.buildParams({ page: String(page) })}`);
+  async fetchCapes(page: number = 1): Promise<{ capes?: Page<Cape>; error?: ErrorResponse }> {
+    const { data, error } = await this.request<Page<Cape>>(`/capes${this.buildParams({ page: String(page) })}`);
     return error ? { error } : { capes: data };
   }
 
@@ -220,8 +219,8 @@ export class McUtilsAPI {
    * @param id the ID of the cape (UUID)
    * @returns the cape details or the error (if one occurred)
    */
-  async fetchCape(id: string): Promise<{ cape?: CapeDTO; error?: ErrorResponse }> {
-    const { data, error } = await this.request<CapeDTO>(`/capes/${id}`);
+  async fetchCape(id: string): Promise<{ cape?: Cape; error?: ErrorResponse }> {
+    const { data, error } = await this.request<Cape>(`/capes/${id}`);
     return error ? { error } : { cape: data };
   }
 
@@ -285,8 +284,8 @@ export class McUtilsAPI {
    * @param page the page to fetch (default: 1)
    * @returns the list of skins or the error (if one occurred)
    */
-  async fetchSkins(page: number = 1): Promise<{ skins?: SkinsResponsePage; error?: ErrorResponse }> {
-    const { data, error } = await this.request<SkinsResponsePage>(`/skins${this.buildParams({ page: String(page) })}`);
+  async fetchSkins(page: number = 1): Promise<{ skins?: Page<Skin>; error?: ErrorResponse }> {
+    const { data, error } = await this.request<Page<Skin>>(`/skins${this.buildParams({ page: String(page) })}`);
     return error ? { error } : { skins: data };
   }
 
@@ -307,8 +306,8 @@ export class McUtilsAPI {
    * @param id the ID of the skin (UUID)
    * @returns the skin details or the error (if one occurred)
    */
-  async fetchSkin(id: string): Promise<{ skin?: SkinDTO; error?: ErrorResponse }> {
-    const { data, error } = await this.request<SkinDTO>(`/skins/${id}`);
+  async fetchSkin(id: string): Promise<{ skin?: Skin; error?: ErrorResponse }> {
+    const { data, error } = await this.request<Skin>(`/skins/${id}`);
     return error ? { error } : { skin: data };
   }
 }
