@@ -7,6 +7,7 @@ export type Cape = {
   textureUrl: string;
   parts: Record<CapePart, string>;
   accountsOwned: number;
+  firstSeen: string;
   firstSeenUsing?: string;
   accountsSeenOwning?: string[];
 };

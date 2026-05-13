@@ -9,6 +9,7 @@ export type Skin = {
   textureUrl: string;
   parts: Record<SkinPart, string>;
   accountsUsed: number;
+  firstSeen: string;
   firstSeenUsing?: string;
   accountsSeenUsing?: string[];
 };
