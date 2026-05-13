@@ -1,19 +1,18 @@
+import { CachedPlayerName } from "./types/cache/cached-player-name";
+import { Player } from "./types/player/player";
+import { PlayerSearchEntry } from "./types/player/player-search-entry";
+import { CapeDTO } from "./types/response/cape/cape-dto";
+import { CapesResponsePage } from "./types/response/cape/capes-response";
 import type { ErrorResponse } from "./types/response/error-response";
-import type { ServerBlockedResponse } from "./types/response/server-blocked-response";
 import type { IpLookup } from "./types/response/ip-lookup-response";
+import type { ServerBlockedResponse } from "./types/response/server-blocked-response";
+import { SkinDTO } from "./types/response/skin/skin-dto";
+import { SkinsResponsePage } from "./types/response/skin/skins-response";
+import { StatisticsResponse } from "./types/response/statistics-response";
+import { ServerRegistryEntry } from "./types/server-registry/server-registry-entry";
 import type { BedrockServer } from "./types/server/impl/bedrock-server";
 import type { JavaServer } from "./types/server/impl/java-server";
 import type { ServerPlatform } from "./types/server/server";
-import type { Cape } from "./types/player/cape/cape";
-import { ServerRegistryEntry } from "./types/server-registry/server-registry-entry";
-import { Player } from "./types/player/player";
-import { CachedPlayerName } from "./types/cache/cached-player-name";
-import { StatisticsResponse } from "./types/response/statistics-response";
-import { Skin } from "./types/player/skin/skin";
-import { Page } from "./types/pagination/pagination";
-import { PlayerSearchEntry } from "./types/player/player-search-entry";
-import { SkinsResponsePage } from "./types/response/skin/skins-response";
-import { SkinDTO } from "./types/response/skin/skin-dto";
 
 type RequestOptions = RequestInit & { responseType?: "json" | "arrayBuffer" };
 
@@ -21,10 +20,7 @@ export class McUtilsAPI {
   private readonly endpoint: string;
   private readonly fetchOptions?: RequestInit;
 
-  constructor(
-    endpoint: string = "https://mc.fascinated.cc/api",
-    fetchOptions?: RequestInit
-  ) {
+  constructor(endpoint: string = "https://mc.fascinated.cc/api", fetchOptions?: RequestInit) {
     this.endpoint = endpoint;
     this.fetchOptions = fetchOptions;
   }
@@ -36,10 +32,7 @@ export class McUtilsAPI {
    * @param options the options for the request
    * @returns the data or the error (if one occurred)
    */
-  private async request<T>(
-    path: string,
-    options?: RequestOptions
-  ): Promise<{ data?: T; error?: ErrorResponse }> {
+  private async request<T>(path: string, options?: RequestOptions): Promise<{ data?: T; error?: ErrorResponse }> {
     const { responseType = "json", ...init } = options ?? {};
     const url = path.startsWith("http") ? path : `${this.endpoint}${path}`;
     const response = await fetch(url, { ...this.fetchOptions, ...init });
@@ -48,8 +41,7 @@ export class McUtilsAPI {
       return { error: (await response.json()) as ErrorResponse };
     }
 
-    const data =
-      responseType === "arrayBuffer" ? await response.arrayBuffer() : await response.json();
+    const data = responseType === "arrayBuffer" ? await response.arrayBuffer() : await response.json();
     return { data: data as T };
   }
 
@@ -73,11 +65,9 @@ export class McUtilsAPI {
    */
   async fetchServer(
     host: string,
-    type: ServerPlatform
+    type: ServerPlatform,
   ): Promise<{ server?: JavaServer | BedrockServer; error?: ErrorResponse }> {
-    const { data, error } = await this.request<JavaServer | BedrockServer>(
-      `/servers/${type}/${host}`
-    );
+    const { data, error } = await this.request<JavaServer | BedrockServer>(`/servers/${type}/${host}`);
     return error ? { error } : { server: data };
   }
 
@@ -87,9 +77,7 @@ export class McUtilsAPI {
    * @param host the host to fetch the server using (eg: aetheria.cc)
    * @returns the server or the error (if one occurred)
    */
-  async fetchJavaServer(
-    host: string
-  ): Promise<{ server?: JavaServer; error?: ErrorResponse }> {
+  async fetchJavaServer(host: string): Promise<{ server?: JavaServer; error?: ErrorResponse }> {
     const { data, error } = await this.request<JavaServer>(`/servers/java/${host}`);
     return error ? { error } : { server: data };
   }
@@ -100,12 +88,8 @@ export class McUtilsAPI {
    * @param host the host to fetch the server using (eg: geo.hivebedrock.network)
    * @returns the server or the error (if one occurred)
    */
-  async fetchBedrockServer(
-    host: string
-  ): Promise<{ server?: BedrockServer; error?: ErrorResponse }> {
-    const { data, error } = await this.request<BedrockServer>(
-      `/servers/bedrock/${host}`
-    );
+  async fetchBedrockServer(host: string): Promise<{ server?: BedrockServer; error?: ErrorResponse }> {
+    const { data, error } = await this.request<BedrockServer>(`/servers/bedrock/${host}`);
     return error ? { error } : { server: data };
   }
 
@@ -115,12 +99,8 @@ export class McUtilsAPI {
    * @param host the hostname to check (eg: aetheria.cc)
    * @returns the blocked status or the error (if one occurred)
    */
-  async fetchServerBlocked(
-    host: string
-  ): Promise<{ blocked?: boolean; error?: ErrorResponse }> {
-    const { data, error } = await this.request<ServerBlockedResponse>(
-      `/servers/blocked/${host}`
-    );
+  async fetchServerBlocked(host: string): Promise<{ blocked?: boolean; error?: ErrorResponse }> {
+    const { data, error } = await this.request<ServerBlockedResponse>(`/servers/blocked/${host}`);
     if (error) return { error };
     return { blocked: data!.blocked };
   }
@@ -131,9 +111,7 @@ export class McUtilsAPI {
    * @param query the IP address to lookup (eg: 127.0.0.1)
    * @returns the IP lookup response or the error (if one occurred)
    */
-  async fetchIpLookup(
-    query: string
-  ): Promise<{ data?: IpLookup; error?: ErrorResponse }> {
+  async fetchIpLookup(query: string): Promise<{ data?: IpLookup; error?: ErrorResponse }> {
     return this.request<IpLookup>(`/ips/${query}`);
   }
 
@@ -143,9 +121,7 @@ export class McUtilsAPI {
    * @param id the UUID or username of the player (eg: ImFascinated)
    * @returns the player or the error (if one occurred)
    */
-  async fetchPlayer(
-    id: string
-  ): Promise<{ player?: Player; error?: ErrorResponse }> {
+  async fetchPlayer(id: string): Promise<{ player?: Player; error?: ErrorResponse }> {
     const { data, error } = await this.request<Player>(`/players/${id}`);
     return error ? { error } : { player: data };
   }
@@ -156,12 +132,8 @@ export class McUtilsAPI {
    * @param id the UUID or username to resolve (eg: ImFascinated)
    * @returns the player name data or the error (if one occurred)
    */
-  async fetchPlayerUuid(
-    id: string
-  ): Promise<{ playerName?: CachedPlayerName; error?: ErrorResponse }> {
-    const { data, error } = await this.request<CachedPlayerName>(
-      `/players/uuid/${id}`
-    );
+  async fetchPlayerUuid(id: string): Promise<{ playerName?: CachedPlayerName; error?: ErrorResponse }> {
+    const { data, error } = await this.request<CachedPlayerName>(`/players/uuid/${id}`);
     return error ? { error } : { playerName: data };
   }
 
@@ -171,13 +143,8 @@ export class McUtilsAPI {
    * @param host the hostname of the server (eg: aetheria.cc)
    * @returns the PNG image or the error (if one occurred)
    */
-  async fetchServerIcon(
-    host: string
-  ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
-    const { data, error } = await this.request<ArrayBuffer>(
-      `/servers/icon/${host}`,
-      { responseType: "arrayBuffer" }
-    );
+  async fetchServerIcon(host: string): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
+    const { data, error } = await this.request<ArrayBuffer>(`/servers/icon/${host}`, { responseType: "arrayBuffer" });
     return error ? { error } : { image: data };
   }
 
@@ -192,11 +159,11 @@ export class McUtilsAPI {
   async fetchServerPreview(
     platform: string,
     host: string,
-    size = 768
+    size = 768,
   ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
     const { data, error } = await this.request<ArrayBuffer>(
       `/servers/${platform}/preview/${host}${this.buildParams({ size: String(size) })}`,
-      { responseType: "arrayBuffer" }
+      { responseType: "arrayBuffer" },
     );
     return error ? { error } : { image: data };
   }
@@ -207,13 +174,10 @@ export class McUtilsAPI {
    * @param id the UUID or username of the player (eg: ImFascinated)
    * @returns the skin PNG image or the error (if one occurred)
    */
-  async fetchPlayerSkinTexture(
-    id: string
-  ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
-    const { data, error } = await this.request<ArrayBuffer>(
-      `/skins/${id}/texture.png`,
-      { responseType: "arrayBuffer" }
-    );
+  async fetchPlayerSkinTexture(id: string): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
+    const { data, error } = await this.request<ArrayBuffer>(`/skins/${id}/texture.png`, {
+      responseType: "arrayBuffer",
+    });
     return error ? { error } : { image: data };
   }
 
@@ -230,26 +194,35 @@ export class McUtilsAPI {
     id: string,
     part: string,
     size = 768,
-    overlays = true
+    overlays = true,
   ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
     const { data, error } = await this.request<ArrayBuffer>(
       `/skins/${id}/${part}.png${this.buildParams({ size: String(size), overlays: String(overlays) })}`,
-      { responseType: "arrayBuffer" }
+      { responseType: "arrayBuffer" },
     );
     return error ? { error } : { image: data };
   }
 
   /**
-   * Fetch the list of available capes (e.g. Migrator).
+   * Fetch a paginated list of capes.
    *
-   * @returns the list of cape data or the error (if one occurred)
+   * @param page the page to fetch (default: 1)
+   * @returns the page of capes or the error (if one occurred)
    */
-  async fetchCapes(): Promise<{
-    capes?: Cape[];
-    error?: ErrorResponse;
-  }> {
-    const { data, error } = await this.request<Cape[]>(`/capes`);
+  async fetchCapes(page: number = 1): Promise<{ capes?: CapesResponsePage; error?: ErrorResponse }> {
+    const { data, error } = await this.request<CapesResponsePage>(`/capes${this.buildParams({ page: String(page) })}`);
     return error ? { error } : { capes: data };
+  }
+
+  /**
+   * Fetch the details of a specific cape.
+   *
+   * @param id the ID of the cape (UUID)
+   * @returns the cape details or the error (if one occurred)
+   */
+  async fetchCape(id: string): Promise<{ cape?: CapeDTO; error?: ErrorResponse }> {
+    const { data, error } = await this.request<CapeDTO>(`/capes/${id}`);
+    return error ? { error } : { cape: data };
   }
 
   /**
@@ -258,13 +231,10 @@ export class McUtilsAPI {
    * @param query player UUID/username or 64-char cape texture id
    * @returns the cape PNG image or the error (if one occurred)
    */
-  async fetchCapeTexture(
-    query: string
-  ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
-    const { data, error } = await this.request<ArrayBuffer>(
-      `/capes/${query}/texture.png`,
-      { responseType: "arrayBuffer" }
-    );
+  async fetchCapeTexture(query: string): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
+    const { data, error } = await this.request<ArrayBuffer>(`/capes/${query}/texture.png`, {
+      responseType: "arrayBuffer",
+    });
     return error ? { error } : { image: data };
   }
 
@@ -279,11 +249,11 @@ export class McUtilsAPI {
   async fetchCapePart(
     query: string,
     type: string,
-    size = 768
+    size = 768,
   ): Promise<{ image?: ArrayBuffer; error?: ErrorResponse }> {
     const { data, error } = await this.request<ArrayBuffer>(
       `/capes/${query}/${type}.png${this.buildParams({ size: String(size) })}`,
-      { responseType: "arrayBuffer" }
+      { responseType: "arrayBuffer" },
     );
     return error ? { error } : { image: data };
   }
@@ -295,9 +265,7 @@ export class McUtilsAPI {
    * @returns the list of server registry entries or the error (if one occurred)
    */
   async fetchServerRegistryEntries(query: string): Promise<{ entries?: ServerRegistryEntry[]; error?: ErrorResponse }> {
-    const { data, error } = await this.request<ServerRegistryEntry[]>(
-      `/servers${this.buildParams({ query: query })}`
-    );
+    const { data, error } = await this.request<ServerRegistryEntry[]>(`/servers${this.buildParams({ query: query })}`);
     return error ? { error } : { entries: data };
   }
 
@@ -318,9 +286,7 @@ export class McUtilsAPI {
    * @returns the list of skins or the error (if one occurred)
    */
   async fetchSkins(page: number = 1): Promise<{ skins?: SkinsResponsePage; error?: ErrorResponse }> {
-    const { data, error } = await this.request<SkinsResponsePage>(
-      `/skins${this.buildParams({ page: String(page) })}`
-    );
+    const { data, error } = await this.request<SkinsResponsePage>(`/skins${this.buildParams({ page: String(page) })}`);
     return error ? { error } : { skins: data };
   }
 

@@ -11,7 +11,6 @@ export type Player = {
   skinHistory: SkinHistory[];
   cape?: Cape;
   capeHistory?: CapeHistory[];
-  optifineCape?: Cape;
   submittedUuids: number;
   lastUpdated: Date;
   firstSeen: Date;
