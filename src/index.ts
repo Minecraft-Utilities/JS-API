@@ -1,8 +1,7 @@
 import { CachedPlayerName } from "./types/cache/cached-player-name";
 import { Page } from "./types/pagination/pagination";
 import { Cape } from "./types/player/cape/cape";
-import { Player } from "./types/player/player";
-import { PlayerSearchEntry } from "./types/player/player-search-entry";
+import type { BasicPlayer, FullPlayer, PlayerType } from "./types/player/player";
 import { Skin } from "./types/player/skin/skin";
 import type { ErrorResponse } from "./types/response/error-response";
 import type { IpLookup } from "./types/response/ip-lookup-response";
@@ -120,8 +119,12 @@ export class McUtilsAPI {
    * @param id the UUID or username of the player (eg: ImFascinated)
    * @returns the player or the error (if one occurred)
    */
-  async fetchPlayer(id: string): Promise<{ player?: Player; error?: ErrorResponse }> {
-    const { data, error } = await this.request<Player>(`/players/${id}`);
+  async fetchPlayer(
+    id: string,
+    type?: PlayerType,
+  ): Promise<{ player?: BasicPlayer | FullPlayer; error?: ErrorResponse }> {
+    const params = type ? this.buildParams({ type }) : "";
+    const { data, error } = await this.request<BasicPlayer | FullPlayer>(`/players/${id}${params}`);
     return error ? { error } : { player: data };
   }
 
@@ -295,8 +298,13 @@ export class McUtilsAPI {
    * @param query the query to search for (eg: aetheria)
    * @returns the player search entry or the error (if one occurred)
    */
-  async searchPlayers(query: string): Promise<{ entries?: PlayerSearchEntry[]; error?: ErrorResponse }> {
-    const { data, error } = await this.request<PlayerSearchEntry[]>(`/players${this.buildParams({ query: query })}`);
+  async searchPlayers(
+    query: string,
+    type?: PlayerType,
+  ): Promise<{ entries?: BasicPlayer[] | FullPlayer[]; error?: ErrorResponse }> {
+    const params: Record<string, string> = { query };
+    if (type) params.type = type;
+    const { data, error } = await this.request<BasicPlayer[] | FullPlayer[]>(`/players${this.buildParams(params)}`);
     return error ? { error } : { entries: data };
   }
 

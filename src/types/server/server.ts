@@ -46,8 +46,8 @@ export type GeoLocation = {
   countryCode: string;
   region: string;
   city: string;
-  timeZone: string;
-  postalCode: string;
+  timeZone?: string;
+  postalCode?: string;
   latitude: number;
   longitude: number;
   flagUrl: string;

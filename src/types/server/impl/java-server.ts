@@ -14,9 +14,9 @@ export interface JavaServer extends Server {
 
 export type ServerVersion = {
   name: string;
-  platform: string;
+  platform?: string;
   protocol: number;
-  protocolName: string;
+  protocolName?: string;
 };
 
 export type ServerFavicon = {

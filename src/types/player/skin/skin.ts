@@ -8,7 +8,7 @@ export type Skin = {
   legacy: boolean;
   textureUrl: string;
   parts: Record<SkinPart, string>;
-  accountsUsed: number;
+  uniqueOwners: number;
   firstSeen: string;
   firstSeenUsing?: string;
   accountsSeenUsing?: string[];

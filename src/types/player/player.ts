@@ -1,17 +1,24 @@
-import { Cape } from "./cape/cape";
-import { CapeHistory } from "./cape/cape-history";
-import { Skin } from "./skin/skin";
-import { SkinHistory } from "./skin/skin-history";
+import type { Cape } from "./cape/cape";
+import type { CapeHistory } from "./cape/cape-history";
+import type { Skin } from "./skin/skin";
+import type { SkinHistory } from "./skin/skin-history";
+import type { UsernameHistory } from "./username-history";
 
-export type Player = {
+export type PlayerType = "FULL" | "BASIC";
+
+export type BasicPlayer = {
   uniqueId: string;
   username: string;
-  legacyAccount: boolean;
   skin: Skin;
-  skinHistory: SkinHistory[];
   cape?: Cape;
-  capeHistory?: CapeHistory[];
+  firstSeen: string;
+};
+
+export type FullPlayer = BasicPlayer & {
+  legacyAccount: boolean;
   submittedUuids: number;
-  lastUpdated: Date;
-  firstSeen: Date;
+  skinHistory: SkinHistory[];
+  capeHistory?: CapeHistory[];
+  usernameHistory?: UsernameHistory[];
+  lastUpdated: string;
 };
