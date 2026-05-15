@@ -1,1 +1,1 @@
-export type CapePart = "FRONT";
+export type CapePart = "FRONT" | "ISO";
