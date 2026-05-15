@@ -3,6 +3,7 @@ import { Page } from "./types/pagination/pagination";
 import { Cape } from "./types/player/cape/cape";
 import type { BasicPlayer, FullPlayer, PlayerType } from "./types/player/player";
 import { Skin } from "./types/player/skin/skin";
+import type { RecentUsernameChange } from "./types/player/recent-username-change";
 import type { ErrorResponse } from "./types/response/error-response";
 import type { IpLookup } from "./types/response/ip-lookup-response";
 import type { ServerBlockedResponse } from "./types/response/server-blocked-response";
@@ -317,6 +318,16 @@ export class McUtilsAPI {
   async fetchSkin(id: string): Promise<{ skin?: Skin; error?: ErrorResponse }> {
     const { data, error } = await this.request<Skin>(`/skins/${id}`);
     return error ? { error } : { skin: data };
+  }
+
+  /**
+   * Fetch recent username changes across all players.
+   *
+   * @returns the list of recent username changes or the error (if one occurred)
+   */
+  async getRecentNameChanges(): Promise<{ nameChanges?: RecentUsernameChange[]; error?: ErrorResponse }> {
+    const { data, error } = await this.request<RecentUsernameChange[]>(`/players/name-changes`);
+    return error ? { error } : { nameChanges: data };
   }
 }
 
