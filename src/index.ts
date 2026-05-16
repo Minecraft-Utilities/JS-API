@@ -2,8 +2,9 @@ import { CachedPlayerName } from "./types/cache/cached-player-name";
 import { Page } from "./types/pagination/pagination";
 import { Cape } from "./types/player/cape/cape";
 import type { BasicPlayer, FullPlayer, PlayerType } from "./types/player/player";
-import { Skin } from "./types/player/skin/skin";
 import type { RecentUsernameChange } from "./types/player/recent-username-change";
+import { Skin } from "./types/player/skin/skin";
+import { SkinLookupSort } from "./types/player/skin/skin-lookup-sort";
 import type { ErrorResponse } from "./types/response/error-response";
 import type { IpLookup } from "./types/response/ip-lookup-response";
 import type { ServerBlockedResponse } from "./types/response/server-blocked-response";
@@ -288,8 +289,10 @@ export class McUtilsAPI {
    * @param page the page to fetch (default: 1)
    * @returns the list of skins or the error (if one occurred)
    */
-  async fetchSkins(page: number = 1): Promise<{ skins?: Page<Skin>; error?: ErrorResponse }> {
-    const { data, error } = await this.request<Page<Skin>>(`/skins${this.buildParams({ page: String(page) })}`);
+  async fetchSkins(page: number = 1, type?: SkinLookupSort): Promise<{ skins?: Page<Skin>; error?: ErrorResponse }> {
+    const { data, error } = await this.request<Page<Skin>>(
+      `/skins${this.buildParams({ page: String(page), sort: type ?? "trending" })}`,
+    );
     return error ? { error } : { skins: data };
   }
 
