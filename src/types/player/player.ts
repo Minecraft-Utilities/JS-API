@@ -15,6 +15,7 @@ export type BasicPlayer = {
 export type FullPlayer = BasicPlayer & {
   legacyAccount: boolean;
   submittedUuids: number;
+  monthlyViews: number;
   skinHistory: Skin[];
   capeHistory?: Cape[];
   usernameHistory?: UsernameHistory[];
